@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: protechtos-vapt
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn vapt_api:app
+    plan: free
+    envVars:
+      - key: FLASK_ENV
+        value: production

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container-box">
+    <h1 style="text-align: center;">🕒 Recent Scans</h1>
+
+    {% if scan_logs %}
+    <table style="width: 100%; border-collapse: collapse; margin-top: 30px;">
+        <thead>
+            <tr style="background: #00ffe7; color: #000;">
+                <th>Target</th>
+                <th>IP</th>
+                <th>Port</th>
+                <th>Status</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for scan in scan_logs %}
+            <tr>
+                <td>{{ scan.target }}</td>
+                <td>{{ scan.ip }}</td>
+                <td>{{ scan.port }}</td>
+                <td style="color: {{ 'lime' if scan.status == 'open' else 'red' }};">{{ scan.status }}</td>
+                <td>{{ scan.timestamp }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; color: #ff0066;">❌ No scan logs found.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

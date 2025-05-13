@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>🧠 Form Extractor | PROTECHTOS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: url('/static/bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #00ffe7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-right-links {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .top-right-links a {
+            color: #00ffe7;
+            text-decoration: none;
+            font-size: 14px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 6px 12px;
+            border-radius: 6px;
+            box-shadow: 0 0 5px #00ffe7;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 100px auto;
+            background-color: rgba(0, 0, 0, 0.85);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 0 25px #00ffe7;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 12px;
+            background: #111;
+            color: #00ffe7;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            box-shadow: 0 0 10px #00ffe7;
+        }
+
+        button {
+            padding: 12px 20px;
+            background: #00ffe7;
+            color: #000;
+            border: none;
+            font-weight: bold;
+            font-size: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            box-shadow: 0 0 15px #00ffe7;
+            cursor: pointer;
+        }
+
+        .form-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #00ffe7;
+        }
+
+        .form-box h4 {
+            margin-bottom: 8px;
+        }
+
+        .input-field {
+            margin-left: 20px;
+        }
+
+        form.inline-form {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="top-right-links">
+        <a href="/">🏠 Home</a>
+        <a href="/dashboard">📊 Dashboard</a>
+        <a href="/crawl">🕷️ Crawler</a>
+        <a href="/recent-scans">🕒 Recent Scans</a>
+        <a href="/logout">🚪 Logout</a>
+    </div>
+
+    <div class="container">
+        <h1>🧠 Detected Forms</h1>
+
+        <form method="POST">
+            <input type="text" name="target" placeholder="Enter full URL (http://...)" required>
+            <button type="submit">Extract</button>
+        </form>
+
+        {% if error %}
+        <p style="color:red;">{{ error }}</p>
+        {% endif %}
+
+        {% for form in forms %}
+        <div class="form-box">
+            <h4>Action: <span style="color:#0f0">{{ form.action }}</span></h4>
+            <p>Method: {{ form.method|upper }}</p>
+            <p>Inputs:</p>
+            <ul>
+                {% for input in form.inputs %}
+                <li class="input-field">🔹 {{ input.name }} ({{ input.type }})</li>
+                {% endfor %}
+            </ul>
+
+            <form method="POST" action="/test-form-vuln" class="inline-form">
+                <input type="hidden" name="action" value="{{ form.action }}">
+                <input type="hidden" name="method" value="{{ form.method }}">
+                {% for input in form.inputs %}
+                <input type="hidden" name="inputs[]" value="{{ input.name }}">
+                {% endfor %}
+                <button type="submit">🚨 Scan This Form</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+
+</html>

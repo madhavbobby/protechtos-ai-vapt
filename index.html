@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AI VAPT Tool</title>
+</head>
+
+<body>
+    <h1>AI VAPT Tool - PROTECHTOS</h1>
+
+    <form id="vaptForm">
+        <label>Feature 1: <input type="number" step="any" name="feature_1" required></label><br>
+        <label>Feature 2: <input type="number" step="any" name="feature_2" required></label><br>
+        <button type="submit">Predict</button>
+    </form>
+
+    <h2 id="result"></h2>
+
+    <script>
+        document.getElementById("vaptForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const input = {};
+            formData.forEach((val, key) => input[key] = parseFloat(val));
+
+            const res = await fetch("http://127.0.0.1:5000/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(input),
+            });
+            const data = await res.json();
+            const result = data.result;
+
+            const resultEl = document.getElementById("result");
+            if (result === 1) {
+                resultEl.innerHTML = `<span style="color:red; font-size:24px;">🔴 Vulnerable</span>`;
+            } else {
+                resultEl.innerHTML = `<span style="color:green; font-size:24px;">🟢 Not Vulnerable</span>`;
+            }
+        });
+    </script>
+</body>
+
+</html>

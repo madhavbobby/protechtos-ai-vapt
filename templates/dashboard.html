@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container-box">
+    <h1 style="text-align: center;">📊 Dashboard Overview</h1>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; margin-top: 30px;">
+        <div
+            style="flex: 1; min-width: 220px; background: #111; padding: 20px; border-radius: 10px; box-shadow: 0 0 12px #00ffe7;">
+            <h3>Total Scans</h3>
+            <p style="font-size: 28px; color: #0f0;">{{ total_scans }}</p>
+        </div>
+        <div
+            style="flex: 1; min-width: 220px; background: #111; padding: 20px; border-radius: 10px; box-shadow: 0 0 12px #00ffe7;">
+            <h3>Open Ports</h3>
+            <p style="font-size: 28px; color: #00e0ff;">{{ open_ports }}</p>
+        </div>
+        <div
+            style="flex: 1; min-width: 220px; background: #111; padding: 20px; border-radius: 10px; box-shadow: 0 0 12px #00ffe7;">
+            <h3>Closed Ports</h3>
+            <p style="font-size: 28px; color: #ff0066;">{{ closed_ports }}</p>
+        </div>
+    </div>
+
+    <!-- Bar Chart -->
+    <div style="margin-top: 50px;">
+        <h3 style="color: #00ffe7;">📅 Scans Per Day</h3>
+        <canvas id="scanChart" height="250"></canvas>
+    </div>
+
+    <!-- Pie Chart -->
+    <div style="margin-top: 50px;">
+        <h3 style="color: #00ffe7;">🧩 Port Status Distribution</h3>
+        <canvas id="portChart" height="250"></canvas>
+    </div>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const scanLabels = {{ scans_by_date.keys() | list | tojson }};
+    const scanData = {{ scans_by_date.values() | list | tojson }};
+
+    new Chart(document.getElementById('scanChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: scanLabels,
+            datasets: [{
+                label: 'Scans',
+                data: scanData,
+                backgroundColor: '#00ffe7',
+                borderColor: '#00ffe7',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { color: '#fff' } },
+                x: { ticks: { color: '#fff' } }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('portChart').getContext('2d'), {
+        type: 'pie',
+        data: {
+            labels: ['Open Ports', 'Closed Ports'],
+            datasets: [{
+                data: [{{ open_ports }}, {{ closed_ports }}],
+        backgroundColor: ['#00e0ff', '#ff0066']
+    }]
+    },
+        options: {
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#fff'
+                }
+            }
+        }
+    }
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PROTECHTOS AI VAPT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            background: #0e0e0e;
+            color: #fff;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #111;
+            height: 100vh;
+            padding: 20px;
+            box-shadow: 2px 0 10px #00ffe7;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar h2 {
+            color: #00ffe7;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #eee;
+            padding: 10px;
+            margin: 10px 0;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: #00ffe7;
+            color: #000;
+        }
+
+        .content {
+            margin-left: 270px;
+            padding: 40px;
+            flex: 1;
+        }
+
+        .container-box {
+            background: rgba(0, 255, 231, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 20px #00ffe7;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 6px;
+            border: none;
+            background: #111;
+            color: #fff;
+            outline: none;
+            box-shadow: 0 0 5px #00ffe7;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #00ffe7;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 10px #00ffe7;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #00c2b2;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #222;
+            border-left: 4px solid #00ffe7;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        th {
+            background: #00ffe7;
+            color: #000;
+        }
+
+        tr:nth-child(even) {
+            background: #111;
+        }
+
+        tr:hover {
+            background: #1e1e1e;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2>🛡️ PROTECHTOS</h2>
+        <a href="{{ url_for('home') }}">🏠 Home</a>
+        <a href="{{ url_for('dashboard') }}">📊 Dashboard</a>
+        <a href="{{ url_for('recent_scans') }}">🕑 Recent Scans</a>
+        <a href="{{ url_for('download_scans') }}">⬇️ Export Scans</a>
+        <a href="{{ url_for('logout') }}">🚪 Logout</a>
+    </div>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+
+</html>

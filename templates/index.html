@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container-box">
+    <h1>🔍 PROTECHTOS AI VAPT Tool</h1>
+
+    <form method="POST" action="/scan_ip">
+        <input type="text" name="target" placeholder="Enter IP or Domain (e.g. 192.168.1.1)" required />
+        <button type="submit">Scan</button>
+    </form>
+
+    <form method="POST" action="/predict" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".csv" />
+        <button type="submit">Predict CSV</button>
+    </form>
+
+    {% if result %}
+    <div class="result">{{ result|safe }}</div>
+    {% endif %}
+
+    {% if table %}
+    <div class="result-table">{{ table|safe }}</div>
+    {% endif %}
+
+    {% if scan_table %}
+    <table class="result-table">
+        <thead>
+            <tr>
+                <th>Target</th>
+                <th>IP</th>
+                <th>Port</th>
+                <th>Status</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in scan_table %}
+            <tr>
+                <td>{{ row.target }}</td>
+                <td>{{ row.ip }}</td>
+                <td>{{ row.port }}</td>
+                <td>{{ row.status }}</td>
+                <td>{{ row.timestamp }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+
+{% endblock %}
