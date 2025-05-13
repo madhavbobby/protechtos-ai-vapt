@@ -1,18 +1,15 @@
-altgraph @ file:///AppleInternal/Library/BuildRoots/bcce998f-ff34-11ef-9d34-f2a857e00a32/Library/Caches/com.apple.xbs/Sources/python3/altgraph-0.17.2-py2.py3-none-any.whl
 beautifulsoup4==4.13.4
 blinker==1.9.0
 certifi==2025.4.26
 charset-normalizer==3.4.2
 click==8.1.8
 Flask==3.1.0
-future @ file:///AppleInternal/Library/BuildRoots/bcce998f-ff34-11ef-9d34-f2a857e00a32/Library/Caches/com.apple.xbs/Sources/python3/future-0.18.2-py3-none-any.whl
 gunicorn==23.0.0
 idna==3.10
 importlib_metadata==8.7.0
 itsdangerous==2.2.0
 Jinja2==3.1.6
 joblib==1.5.0
-macholib @ file:///AppleInternal/Library/BuildRoots/bcce998f-ff34-11ef-9d34-f2a857e00a32/Library/Caches/com.apple.xbs/Sources/python3/macholib-1.15.2-py2.py3-none-any.whl
 MarkupSafe==3.0.2
 numpy==2.0.2
 packaging==25.0
@@ -23,7 +20,6 @@ pytz==2025.2
 requests==2.32.3
 scikit-learn==1.6.1
 scipy==1.13.1
-six @ file:///AppleInternal/Library/BuildRoots/bcce998f-ff34-11ef-9d34-f2a857e00a32/Library/Caches/com.apple.xbs/Sources/python3/six-1.15.0-py2.py3-none-any.whl
 soupsieve==2.7
 threadpoolctl==3.6.0
 typing_extensions==4.13.2
