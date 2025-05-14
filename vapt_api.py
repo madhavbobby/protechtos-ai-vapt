@@ -6,6 +6,7 @@ import socket
 import nmap
 from datetime import datetime
 from functools import wraps
+import os
 
 app = Flask(__name__)
 app.secret_key = 'your_super_secret_key'
@@ -13,7 +14,7 @@ app.secret_key = 'your_super_secret_key'
 # Dummy login credentials
 USER_CREDENTIALS = {'admin': 'vaptsecure123'}
 
-# Login decorator
+# Decorator to protect routes
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -22,7 +23,6 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# Login route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -30,23 +30,35 @@ def login():
         password = request.form['password']
         if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
             session['user'] = username
-            return redirect(url_for('home'))  # 🔁 using 'home' not 'index'
+            return redirect(url_for('index'))
         return render_template('login.html', error='❌ Invalid credentials')
     return render_template('login.html')
 
-# Logout route
 @app.route('/logout')
 def logout():
     session.pop('user', None)
     return redirect(url_for('login'))
 
-# 🏠 Home page
 @app.route('/')
 @login_required
-def home():
+def index():
     return render_template('index.html')
 
-# 🔍 IP Scan
+@app.route('/predict', methods=['POST'])
+@login_required
+def predict():
+    if 'file' not in request.files or request.files['file'].filename == '':
+        return render_template('index.html', result='❌ No file selected')
+
+    file = request.files['file']
+    try:
+        df = pd.read_csv(file)
+        df['prediction'] = 'vulnerable'  # dummy prediction logic
+        output = df.to_html(classes='table table-striped', index=False)
+        return render_template('index.html', result="✅ Prediction Completed", table=output)
+    except Exception as e:
+        return render_template('index.html', result=f'❌ Error: {str(e)}')
+
 @app.route('/scan_ip', methods=['POST'])
 @login_required
 def scan_ip():
@@ -70,6 +82,7 @@ def scan_ip():
                         'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     }
                     scan_data.append(row)
+
                     with open('scan_logs.csv', 'a', newline='') as f:
                         writer = csv.DictWriter(f, fieldnames=row.keys())
                         if f.tell() == 0:
@@ -83,23 +96,6 @@ def scan_ip():
 
     return render_template('index.html', scan_table=scan_data)
 
-# 📤 CSV Prediction
-@app.route('/predict', methods=['POST'])
-@login_required
-def predict():
-    if 'file' not in request.files or request.files['file'].filename == '':
-        return render_template('index.html', result='❌ No file selected')
-
-    file = request.files['file']
-    try:
-        df = pd.read_csv(file)
-        df['prediction'] = 'vulnerable'  # dummy prediction
-        output = df.to_html(classes='table table-striped', index=False)
-        return render_template('index.html', result="✅ Prediction Completed", table=output)
-    except Exception as e:
-        return render_template('index.html', result=f'❌ Error: {str(e)}')
-
-# 📊 Dashboard
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -125,18 +121,16 @@ def dashboard():
     except Exception as e:
         return f"Dashboard error: {str(e)}"
 
-# 📄 Recent Scans
 @app.route('/recent-scans')
 @login_required
 def recent_scans():
     try:
         df = pd.read_csv('scan_logs.csv', on_bad_lines='skip')
         scan_logs = df.to_dict(orient='records')
-    except:
+    except Exception:
         scan_logs = []
     return render_template('recent_scans.html', scan_logs=scan_logs)
 
-# ⬇️ Download CSV
 @app.route('/download-scans')
 @login_required
 def download_scans():
@@ -154,5 +148,7 @@ def download_scans():
     except Exception as e:
         return f"Error: {str(e)}"
 
+# ✅ Render deployment port setup
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
